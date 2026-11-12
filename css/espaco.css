@@ -113,10 +113,10 @@
    A legenda não recebe cliques, para não atrapalhar o arrastar. */
 .foto.giro360 { --corte: 0px; border: 1px solid var(--mais-fraco); background: #1f1f1f; }
 
-/* Só no teste no computador (CENTRAL.ocultarMarcaKuula, em js/espacos.js): a faixa de cima
-   do player fica para fora do quadro — o player é 46 px mais alto que o quadro e começa
-   46 px acima dele. É nessa faixa que o Kuula põe o logo dele e os botões INFO e tela
-   cheia, que ele só deixa desligar em conta paga. A versão para publicar não corta nada. */
+/* Com CENTRAL.ocultarMarcaKuula (js/espacos.js), só para a apresentação interna: a faixa
+   de cima do player fica para fora do quadro — o player é 46 px mais alto que o quadro e
+   começa 46 px acima dele. É nessa faixa que o Kuula põe o logo dele e os botões INFO e
+   tela cheia, que ele só deixa desligar em conta paga. */
 .foto.giro360.sem-marca { --corte: 46px; }
 .foto.giro360 iframe {
   position: absolute;

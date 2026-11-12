@@ -28,10 +28,10 @@ window.CENTRAL = {
   foto360: 'h5Hpv',
 
   // true: corta a faixa de cima do player do Kuula, onde ficam o logo deles e o botão INFO
-  // (que traz os créditos da foto). Vale só para o teste no computador: o Kuula só deixa
-  // esconder isso em conta paga, e a foto de teste é de outro projeto, com autor. Por isso
-  // o _fontes/empacotar.py, que monta a versão para publicar, sempre troca para false.
-  ocultarMarcaKuula: false,
+  // (que traz os créditos da foto). Ligado para a apresentação interna, sem distribuição
+  // (decisão de 2026-11-11). Num site aberto ao público tem de ser false: o Kuula só deixa
+  // esconder isso em conta paga, e a foto de teste é de outro projeto, com autor.
+  ocultarMarcaKuula: true,
 
   // true: os quadros de foto ainda sem foto aparecem vazios (bom enquanto o site é montado).
   // false: só aparecem as fotos que existem. Trocar para false antes de pôr o site no ar.
