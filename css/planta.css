@@ -1,0 +1,645 @@
+/* Central 1926 — estilos da planta interativa (planta.html) e a base do site:
+   cores, letras, topo, lista de espaços e o desenho da planta. A página de cada
+   espaço (espaco.html) usa este arquivo e mais o css/espaco.css.
+
+   Linguagem: desenho de arquitetura em traço branco fino sobre grafite,
+   sem preenchimentos. O que está escolhido inverte: fundo claro, traço escuro. */
+
+
+:root {
+  --grafite: #2b2b2b;
+  --linha: #f4f4f4;
+  --fraco: rgba(244, 244, 244, .64);
+  --mais-fraco: rgba(244, 244, 244, .4);
+  --toque: rgba(244, 244, 244, .1);
+
+  --anton: "Anton", Impact, "Haettenschweiler", "Arial Narrow Bold", sans-serif;
+  --archivo: "Archivo", "Helvetica Neue", Arial, sans-serif;
+
+  --margem: clamp(16px, 4vw, 56px);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  /* --coluna: largura máxima do conteúdo (cada página define a sua, para telas muito largas).
+     --lado: a margem lateral que resulta disso; é ela que centra o conteúdo na tela. */
+  --coluna: 100vw;
+  --lado: max(var(--margem), calc((100% - var(--coluna)) / 2));
+
+  margin: 0;
+  background: var(--grafite);
+  color: var(--linha);
+  font-family: var(--archivo);
+  font-stretch: 112%;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+button { font: inherit; color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--linha);
+  outline-offset: 3px;
+}
+
+/* ---------- topo ---------- */
+
+.topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 16px var(--lado) 14px;
+  border-bottom: 1px solid var(--linha);
+}
+
+.marca {
+  font-family: var(--anton);
+  font-size: 1.6rem;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--linha);
+  text-decoration: none;
+}
+
+.endereco { margin: 0; font-size: .875rem; color: var(--fraco); text-align: right; }
+
+@media (max-width: 479px) {
+  .endereco span { display: none; }
+}
+
+/* ---------- abertura: curta, para a planta já aparecer na primeira tela ---------- */
+
+.abertura {
+  padding: clamp(16px, 2.4vw, 36px) var(--lado) clamp(12px, 1.6vw, 22px);
+  display: grid;
+  gap: .75rem 3rem;
+  align-items: end;
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--anton);
+  font-weight: 400;
+  font-size: clamp(2.75rem, 5.6vw, 5.5rem);
+  line-height: .9;
+  text-transform: uppercase;
+  letter-spacing: .005em;
+}
+
+h1 span { white-space: nowrap; }
+
+/* a estrela de raios da marca ao lado de CENTRAL: da altura das letras (1cap), com um
+   respiro antes dela. Ao carregar, os raios crescem do centro enquanto a estrela gira. */
+.estrela-titulo {
+  width: .72em;
+  height: .72em;
+  width: 1cap;
+  height: 1cap;
+  margin-left: .2em;
+  vertical-align: baseline;
+  overflow: visible;
+}
+
+.estrela-titulo line {
+  stroke: var(--linha);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  animation: raio 1s .35s cubic-bezier(.3, .7, .2, 1) backwards;
+}
+
+.estrela-titulo g {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: estrela-gira 1.5s .35s cubic-bezier(.2, .8, .2, 1) backwards;
+}
+
+@keyframes raio { from { stroke-dashoffset: 1; opacity: 0; } 20% { opacity: 1; } to { stroke-dashoffset: 0; } }
+@keyframes estrela-gira { from { transform: rotate(-200deg) scale(.5); } to { transform: none; } }
+
+.intro { margin: 0; max-width: 44ch; font-size: 1rem; color: var(--fraco); }
+
+/* título numa linha só; o texto fica com o que sobra à direita */
+@media (min-width: 900px) {
+  .abertura { grid-template-columns: auto minmax(15rem, 1fr); }
+  h1 { white-space: nowrap; }
+  .intro { justify-self: end; max-width: 52ch; font-size: .9375rem; }
+}
+
+/* ---------- mesa: andares, lista de espaços e prancha ---------- */
+
+.mesa {
+  padding: 0 var(--lado) clamp(24px, 3vw, 40px);
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "andares" "prancha" "indice";
+}
+
+.andares { grid-area: andares; }
+.prancha { grid-area: prancha; }
+.indice  { grid-area: indice; }
+
+/* tela larga: a lista fica ao lado da planta e faz as vezes de seletor de andar */
+@media (min-width: 1100px) {
+  .mesa {
+    grid-template-columns: 272px minmax(0, 1fr);
+    grid-template-areas: "indice prancha";
+    gap: 20px;
+    align-items: stretch;
+  }
+}
+
+/* seletor de andar (celular e tablet): três partes iguais */
+.andares {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (min-width: 1100px) {
+  .andares { display: none; }
+}
+
+.andar {
+  appearance: none;
+  border: 1px solid var(--linha);
+  background: var(--grafite);
+  padding: 12px 8px 9px;
+  font-family: var(--anton);
+  font-size: 1.25rem;
+  line-height: 1;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.andar + .andar { border-left: 0; }
+.andar:hover { background: #3a3a3a; }
+.andar[aria-pressed="true"] { background: var(--linha); color: var(--grafite); }
+.andar:focus-visible { position: relative; z-index: 1; }
+
+/* no celular a planta fica em pé e é alta: os andares acompanham a rolagem */
+@media (max-width: 599px) {
+  .andares {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    margin: 0 calc(var(--margem) * -1);
+    padding: 8px var(--margem);
+    background: var(--grafite);
+  }
+}
+
+/* ---------- lista de espaços: uma pilha de três andares, como o prédio ---------- */
+
+.indice { display: grid; align-content: start; }
+
+.grupo { border: 1px solid var(--linha); }
+.grupo + .grupo { border-top: 0; }
+
+.grupo-titulo { margin: 0; font-size: 1rem; font-weight: 400; }
+
+.grupo-andar {
+  appearance: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 11px 12px 8px;
+  font-family: var(--anton);
+  font-size: 1.3rem;
+  line-height: 1;
+  text-transform: uppercase;
+  text-align: left;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.grupo-conta {
+  font-family: var(--archivo);
+  font-size: .75rem;
+  text-transform: none;
+  opacity: .64;
+}
+
+.grupo-andar:hover { background: var(--toque); }
+/* o andar que está na planta (ou, na página de um espaço, o andar dele) */
+.grupo-andar[aria-pressed="true"], .grupo-andar.atual { background: var(--linha); color: var(--grafite); }
+
+.linhas { list-style: none; margin: 0; padding: 3px 0 4px; }
+
+.linha {
+  appearance: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 4px 12px;
+  font-size: .9375rem;
+  line-height: 1.35;
+  text-align: left;
+  text-decoration: none;
+  color: var(--fraco);
+  cursor: pointer;
+  transition: background-color .12s ease, color .12s ease;
+}
+
+/* os espaços do andar que está na planta ficam em branco cheio */
+.grupo.ativo .linha { color: var(--linha); }
+
+.linha-area { font-size: .8125rem; font-variant-numeric: tabular-nums; white-space: nowrap; opacity: .72; }
+
+.linha:hover, .linha.quente { background: var(--toque); color: var(--linha); }
+/* (.grupo na frente só para vencer a regra do andar ativo, logo acima) */
+.grupo .linha.escolhida { background: var(--linha); color: var(--grafite); font-weight: 600; }
+
+.grupo-andar:focus-visible, .linha:focus-visible { position: relative; z-index: 1; outline-offset: 2px; }
+
+/* tela larga: a pilha acompanha a altura da prancha (o térreo estica até o pé) */
+@media (min-width: 1100px) {
+  .indice { align-content: stretch; grid-template-rows: auto auto 1fr; }
+}
+
+/* tablet: os três andares lado a lado, embaixo da planta */
+@media (min-width: 700px) and (max-width: 1099px) {
+  .indice { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; }
+  .grupo + .grupo { border-top: 1px solid var(--linha); border-left: 0; }
+}
+
+/* ---------- prancha: a planta e, embaixo, o painel ---------- */
+
+.prancha {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--linha);
+}
+
+.papel {
+  flex: 1;
+  display: grid;
+  align-items: center;
+  padding: clamp(8px, 1.2vw, 16px);
+}
+
+.papel svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Tela larga: a página inteira cabe na altura da tela, sem rolar. A página vira uma
+   coluna que não passa da altura da janela; quem cede é o papel da planta, que encolhe
+   mantendo a proporção (o desenho se ajusta dentro dele). Em monitor muito largo, a
+   largura do conteúdo é limitada pela altura: só o que a planta consegue usar. */
+@media (min-width: 1100px) {
+  .pagina-planta {
+    --coluna: max(1100px, calc((100dvh - 356px) * 2.216 + 292px + 2 * var(--margem)));
+    display: flex;
+    flex-direction: column;
+    max-height: 100dvh;
+  }
+
+  .pagina-planta main { display: flex; flex-direction: column; flex: 0 1 auto; min-height: 0; }
+  .pagina-planta .abertura { flex: none; }
+  .pagina-planta .mesa { flex: 0 1 auto; min-height: 0; grid-template-rows: minmax(0, 1fr); }
+  .pagina-planta .prancha { min-height: 0; }
+  .pagina-planta .painel { flex: none; }
+
+  /* (abaixo de 300 px de planta não vale a pena encolher mais: aí a página rola) */
+  .pagina-planta .papel {
+    position: relative;
+    flex: 0 1 auto;
+    min-height: 300px;
+    aspect-ratio: 1950 / 880;
+    padding: 0;
+  }
+
+  .pagina-planta .papel svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+}
+
+/* celular: planta em pé, limitada para não ficar alta demais */
+.papel svg.retrato { max-width: 420px; margin: 0 auto; }
+
+/* painel: embaixo da planta, diz o que se está vendo. Sem nada escolhido, o andar;
+   com o mouse por cima de um espaço ou depois de um clique, o espaço. Uma leitura só:
+   o nome em letra grande, a descrição embaixo dele, os dados ao lado e, na ponta, o que
+   se pode fazer. A altura é fixa, para a planta não se mexer quando o conteúdo troca. */
+.painel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "titulo acoes" "dados acoes";
+  grid-template-rows: 1fr auto;
+  min-height: 7.25rem;
+  border-top: 1px solid var(--linha);
+  background: var(--grafite);
+}
+
+.painel-titulo {
+  grid-area: titulo;
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 14px 20px 8px;
+}
+
+.painel-nome {
+  margin: 0;
+  font-family: var(--anton);
+  font-size: clamp(2.25rem, 5cqw, 3.5rem);
+  font-weight: 400;
+  line-height: .9;
+  text-transform: uppercase;
+}
+
+.painel-nota { margin: 0; max-width: 46ch; font-size: 1rem; line-height: 1.3; color: var(--fraco); }
+.painel-nota:empty { display: none; }
+
+/* dados: em prancha estreita, uma linha corrida embaixo do nome */
+.painel-dados {
+  grid-area: dados;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 22px;
+  padding: 0 20px 14px;
+  font-size: .9375rem;
+  line-height: 1.3;
+}
+
+.painel-dados > div { display: flex; align-items: baseline; gap: 8px; }
+.painel-dados dt { font-size: .8125rem; color: var(--fraco); }
+.painel-dados dd { margin: 0; font-weight: 600; white-space: nowrap; }
+
+/* ações: ver a página do espaço escolhido e consultar pelo WhatsApp, uma sobre a outra */
+.acoes {
+  grid-area: acoes;
+  display: grid;
+  grid-auto-rows: 1fr;
+  min-width: 14.5rem;
+  border-left: 1px solid var(--linha);
+}
+
+.ver, .consultar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .3em;
+  padding: 0 22px;
+  font-family: var(--anton);
+  font-size: 1.15rem;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  color: var(--linha);
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.consultar:hover { background: var(--toque); }
+
+/* "Ver o espaço" só existe com um espaço escolhido, e acende junto com ele:
+   é o passo seguinte (o mesmo que clicar de novo no espaço) */
+.ver { display: none; background: var(--linha); color: var(--grafite); font-size: 1.35rem; }
+.painel.tem .ver { display: flex; }
+.painel.tem .consultar { border-top: 1px solid var(--linha); }
+.ver:hover { background: #fff; }
+
+.ver:focus-visible, .consultar:focus-visible { outline-offset: -5px; outline-color: currentColor; }
+
+/* prancha larga: os dados ganham coluna própria, em tabela */
+@container (min-width: 860px) {
+  .painel {
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, auto) auto;
+    grid-template-areas: "titulo dados acoes";
+    grid-template-rows: auto;
+  }
+
+  .painel-titulo { padding: 14px 22px; }
+
+  .painel-dados {
+    display: grid;
+    align-content: center;
+    gap: 0;
+    padding: 12px 22px;
+    border-left: 1px solid var(--linha);
+    font-size: 1rem;
+  }
+
+  .painel-dados > div { justify-content: space-between; gap: 24px; padding: 8px 0 7px; }
+  .painel-dados > div + div { border-top: 1px solid var(--mais-fraco); }
+}
+
+/* celular: o painel vira uma barra presa ao pé da tela enquanto a planta está à vista */
+@media (max-width: 599px) {
+  .painel { position: sticky; bottom: 0; z-index: 4; min-height: 0; }
+
+  .painel-titulo { gap: 0; padding: 9px 12px 0; }
+  .painel-nome { font-size: 1.5rem; line-height: 1; }
+  .painel-nota { display: none; }
+
+  .painel-dados { gap: 0 10px; padding: 3px 12px 8px; font-size: .875rem; }
+  .painel-dados dt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .painel-dados dd { font-weight: 400; color: var(--fraco); }
+
+  /* na barra cabe um botão só: sem escolha, consultar; com um espaço escolhido, ver a
+     página dele (que tem a própria consulta) */
+  .acoes { min-width: 0; }
+  .ver, .consultar { padding: 0 16px; font-size: 1.05rem; }
+  .consultar span { display: none; }
+  .painel.tem .consultar { display: none; }
+}
+
+/* ---------- a planta (SVG) ---------- */
+
+/* --u: quantas unidades do desenho cabem em 1 px da tela (js/planta.js mede).
+   Com ele o traço tem sempre a mesma espessura na tela, em qualquer tamanho. */
+.planta { --u: 1.9; isolation: isolate; }
+
+.fundo { fill: var(--grafite); }
+
+.piso { display: none; }
+.piso.ativo { display: inline; animation: troca .32s cubic-bezier(.2, .7, .2, 1); }
+
+/* trocar de andar: o novo entra vindo de cima (subindo) ou de baixo (descendo) */
+@keyframes troca {
+  from { opacity: 0; transform: translate(var(--dx, 0px), var(--dy, 0px)); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes aparece { from { opacity: 0; } to { opacity: 1; } }
+
+/* o desenho não recebe cliques: quem recebe são as áreas por baixo */
+.planta .desenho { pointer-events: none; }
+
+.desenho polyline, .desenho polygon, .desenho path {
+  fill: none;
+  stroke: var(--linha);
+  stroke-width: calc(var(--u) * 1.15px);
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.desenho .parede, .desenho .pilar { fill: var(--grafite); }
+
+/* parede: contorno com o dobro da espessura; o miolo, desenhado depois, cobre a metade
+   de dentro e os traços que sobrariam nos encontros */
+.desenho .parede { stroke-width: calc(var(--u) * 2.3px); }
+.desenho .miolo  { fill: var(--grafite); stroke: none; }
+
+.desenho .fino      { stroke-width: calc(var(--u) * .8px); stroke: var(--fraco); }
+.desenho .degrau    { stroke-width: calc(var(--u) * .75px); stroke: var(--fraco); }
+.desenho .tracejado {
+  stroke-width: calc(var(--u) * .85px);
+  stroke: var(--fraco);
+  stroke-dasharray: calc(var(--u) * 6px) calc(var(--u) * 5px);
+}
+.desenho .verde     { stroke-width: calc(var(--u) * .7px); stroke: var(--mais-fraco); }
+.desenho .cheio     { fill: var(--linha); stroke-width: calc(var(--u) * .6px); }
+
+/* áreas clicáveis */
+.espaco { cursor: pointer; }
+
+.area { fill: transparent; pointer-events: all; transition: fill .15s ease; }
+
+.espaco.quente .area { fill: var(--toque); }
+
+/* realce: o espaço escolhido inverte */
+.realces { pointer-events: none; }
+.realce { display: none; }
+.realce.ligado { display: inline; }
+.realce polygon { fill: #fff; mix-blend-mode: difference; }
+
+.rotulos { pointer-events: none; }
+
+/* nomes: nunca menores na tela do que dá para ler, mesmo com a planta pequena */
+.rotulo-nome {
+  font-family: var(--anton);
+  font-size: max(46px, calc(var(--u) * 15px));
+  text-transform: uppercase;
+  fill: var(--linha);
+  text-anchor: middle;
+}
+
+.rotulo-area {
+  font-family: var(--archivo);
+  font-stretch: 100%;
+  font-size: max(20px, calc(var(--u) * 10.5px));
+  fill: var(--linha);
+  text-anchor: middle;
+}
+
+/* salas: nome menor, para caber dentro de cada uma */
+.rotulo.pequeno .rotulo-nome { font-size: max(33px, calc(var(--u) * 12px)); }
+.rotulo.pequeno .rotulo-area { font-size: max(17px, calc(var(--u) * 9.5px)); }
+
+/* planta em pé (celular) */
+.retrato .rotulo-nome { font-size: calc(var(--u) * 20px); }
+.retrato .rotulo-area { font-size: calc(var(--u) * 11px); }
+.retrato .rotulo.pequeno .rotulo-nome { font-size: calc(var(--u) * 15px); }
+.retrato .rotulo.pequeno .rotulo-area { font-size: calc(var(--u) * 10px); }
+
+/* O nome de cada espaço fica sempre na planta. A metragem só aparece ao passar o mouse
+   (ou o foco) e no espaço escolhido. */
+.rotulo-area { opacity: 0; transition: opacity .15s ease; }
+.rotulo.quente .rotulo-area, .rotulo.ligado .rotulo-area { opacity: 1; }
+
+/* contorno na cor do fundo em volta das letras: onde o nome passa por cima de uma linha do
+   desenho, a linha não corta a letra */
+.rotulo text {
+  paint-order: stroke;
+  stroke: var(--grafite);
+  stroke-width: calc(var(--u) * 3.5px);
+  stroke-linejoin: round;
+}
+
+/* no espaço escolhido (fundo claro), letras escuras e sem o contorno */
+.rotulo.ligado text { fill: var(--grafite); stroke-opacity: 0; }
+/* nome fora da área que acende: continua claro */
+.rotulo.ligado.fora text { fill: var(--linha); }
+
+/* a estrela de raios da marca: aparece no espaço escolhido */
+.estrela { opacity: 0; pointer-events: none; }
+.estrela.visivel { opacity: 1; }
+.estrela.oculta { display: none; }
+.estrela .raios { stroke: var(--grafite); stroke-width: 2.6; stroke-linecap: round; fill: none; }
+.estrela.fora .raios { stroke: var(--linha); }
+.estrela.visivel .raios {
+  animation: gira .5s cubic-bezier(.2, .8, .2, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes gira { from { transform: rotate(-60deg) scale(.4); } to { transform: rotate(0) scale(1); } }
+
+/* desfazer a escolha: a área apaga, o nome volta a ser claro, a metragem sobe e some e a
+   estrela gira e some. (js/planta.js deixa a classe .saindo, por um instante, no que
+   estava aceso.) Cada animação termina exatamente no estado de repouso, para nada piscar
+   quando a classe sai. */
+.realce.saindo { display: inline; }
+.realce.saindo polygon { animation: area-apaga .42s ease-out forwards; }
+
+.rotulo.saindo .rotulo-nome { animation: nome-clareia .42s ease-out both; }
+.rotulo.saindo .rotulo-area { fill: var(--grafite); stroke: none; animation: metragem-sai .34s cubic-bezier(.5, 0, .9, .5) both; }
+
+.estrela.saindo { animation: some .34s ease-in both; }
+.estrela.saindo .raios {
+  animation: estrela-sai .34s ease-in both;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* escolher: a área acende aos poucos e o nome escurece junto (o inverso da saída) */
+.realce.ligado polygon { animation: area-acende .35s ease-out; }
+.rotulo.ligado .rotulo-nome { animation: nome-escurece .35s ease-out; }
+
+/* (fill-opacity, e não opacity: assim a área continua invertendo o desenho enquanto apaga) */
+@keyframes area-acende { from { fill-opacity: 0; } }
+@keyframes nome-escurece { from { fill: var(--linha); stroke-opacity: 1; } }
+@keyframes area-apaga { to { fill-opacity: 0; } }
+@keyframes some { from { opacity: 1; } to { opacity: 0; } }
+/* o nome fica: só volta do escuro (sobre a área acesa) para o claro (sobre o fundo), e o
+   contorno em volta das letras reaparece aos poucos */
+@keyframes nome-clareia {
+  from { fill: var(--grafite); stroke-opacity: 0; }
+  to   { fill: var(--linha); stroke-opacity: 1; }
+}
+/* a metragem sai: sobe um pouco e some */
+@keyframes metragem-sai { from { opacity: 1; } to { opacity: 0; transform: translateY(calc(var(--u) * -9px)); } }
+@keyframes estrela-sai { to { transform: rotate(80deg) scale(.3); } }
+
+/* abertura: o traço se desenha uma vez */
+.desenhando .piso.ativo .desenho > [pathLength] {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: traca 1.6s cubic-bezier(.55, 0, .2, 1) forwards;
+}
+
+.desenhando .piso.ativo .desenho > :not([pathLength]):not(.miolo),
+.desenhando .piso.ativo .rotulos {
+  animation: aparece .9s .9s both;
+}
+
+@keyframes traca { to { stroke-dashoffset: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .desenhando .piso.ativo .desenho > [pathLength] { stroke-dasharray: none; stroke-dashoffset: 0; }
+}

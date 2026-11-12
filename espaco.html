@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#2b2b2b">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <!-- uma página só para todos os espaços: espaco.html?e=venue, espaco.html?e=rooftop…
+       js/espaco.js preenche tudo (título, fotos, informações) conforme o espaço pedido -->
+  <title>Espaço — Central 1926</title>
+  <meta name="description" content="Os espaços da Central 1926: fotos, área e informações para o seu evento.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@100..125,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/planta.css?v=5">
+  <link rel="stylesheet" href="css/espaco.css?v=5">
+</head>
+<body class="pagina-espaco">
+  <header class="topo">
+    <a class="marca" href="planta.html">Central 1926</a>
+    <p class="endereco">Praça da Bandeira, 137<span>, São Paulo</span></p>
+  </header>
+
+  <main>
+    <!-- primeira tela: do nome do espaço ao botão de consulta, tudo visível sem rolar.
+         À esquerda, a coluna com o nome, o resumo e os dados; à direita, a foto principal,
+         que vai do topo do nome até o pé do botão. -->
+    <div class="tela">
+      <!-- voltar à planta: só uma seta -->
+      <a class="voltar" id="voltar" href="planta.html" aria-label="Voltar à planta" title="Voltar à planta">
+        <svg viewBox="0 0 44 16" aria-hidden="true"><path d="M43 8H2M9 1 2 8l7 7"/></svg>
+      </a>
+
+      <div class="grade">
+        <div class="coluna">
+          <h1 id="e-nome">Espaço</h1>
+
+          <!-- uma linha sobre o espaço; os textos longos ficam embaixo, em "Sobre o espaço" -->
+          <div class="resumo">
+            <p class="chamada" id="e-nota"></p>
+          </div>
+
+          <div class="fatos">
+            <dl class="dados" id="e-dados"></dl>
+
+            <!-- planta de localização, que também serve de mapa: o espaço desta página aceso,
+                 os outros clicáveis (abrem a página deles), e os andares para trocar -->
+            <div class="chave" id="e-chave">
+              <div class="chave-andares" role="group" aria-label="Andar mostrado na planta">
+                <button type="button" class="chave-andar" data-piso="rooftop">Rooftop</button>
+                <button type="button" class="chave-andar" data-piso="primeiro">1º andar</button>
+                <button type="button" class="chave-andar" data-piso="terreo">Térreo</button>
+              </div>
+              <div class="chave-papel" id="e-planta"></div>
+              <a class="chave-legenda" id="e-legenda" href="planta.html">Ver na planta</a>
+            </div>
+
+            <!-- WhatsApp de locação: o número fica em js/espacos.js -->
+            <a class="consultar chamar" id="consultar" target="_blank" rel="noopener">Consultar no WhatsApp</a>
+          </div>
+        </div>
+
+        <!-- foto principal: uma só, grande -->
+        <figure class="foto principal" id="e-principal"></figure>
+      </div>
+    </div>
+
+    <!-- galeria: as outras fotos (até 10), logo abaixo do botão de consulta -->
+    <section class="galeria" id="e-fotos" aria-label="Mais fotos"></section>
+
+    <!-- listas do próprio espaço (quando há) e o que a casa oferece em qualquer evento -->
+    <section class="listas" id="e-listas"></section>
+
+    <section class="todos" aria-labelledby="titulo-todos">
+      <h2 id="titulo-todos">Todos os espaços</h2>
+      <nav class="indice" id="indice" aria-label="Espaços, andar por andar"></nav>
+    </section>
+  </main>
+
+  <script src="js/planta-dados.js?v=5"></script>
+  <script src="js/espacos.js?v=5"></script>
+  <script src="js/planta-base.js?v=5"></script>
+  <script src="js/espaco.js?v=5"></script>
+</body>
+</html>

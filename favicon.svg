@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- ícone da aba: a estrela de raios da marca, traço claro sobre o grafite do site -->
+  <rect width="64" height="64" rx="12" fill="#2b2b2b"/>
+  <g stroke="#f4f4f4" stroke-width="4.6" stroke-linecap="round">
+    <line x1="39.8" y1="33.6" x2="54.5" y2="36.6"/>
+    <line x1="36.4" y1="38.7" x2="44.7" y2="51.2"/>
+    <line x1="30.4" y1="39.8" x2="27.4" y2="54.5"/>
+    <line x1="25.3" y1="36.4" x2="12.8" y2="44.7"/>
+    <line x1="24.2" y1="30.4" x2="9.5" y2="27.4"/>
+    <line x1="27.6" y1="25.3" x2="19.3" y2="12.8"/>
+    <line x1="33.6" y1="24.2" x2="36.6" y2="9.5"/>
+    <line x1="38.7" y1="27.6" x2="51.2" y2="19.3"/>
+  </g>
+</svg>

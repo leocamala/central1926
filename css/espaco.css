@@ -1,0 +1,382 @@
+/* Central 1926 — página de um espaço (espaco.html).
+   Usa a base de css/planta.css (cores, letras, topo, lista de espaços, desenho da planta).
+
+   A página: na primeira tela, uma coluna com o nome do espaço em letra de cartaz, o resumo,
+   os dados, a planta de localização e o botão de consulta; ao lado, a foto principal, do
+   topo do nome ao pé do botão. Embaixo, a galeria, as listas e todos os outros espaços. */
+
+/* em tela muito larga o conteúdo para de crescer e fica centrado */
+.pagina-espaco { --coluna: 1680px; }
+
+/* ---------- primeira tela ---------- */
+
+.tela { padding: clamp(14px, 2vw, 26px) var(--lado) 0; }
+
+/* voltar à planta: só uma seta, no mesmo traço fino da planta. Com o mouse, ela clareia
+   e anda um pouco para a esquerda.
+   (position + z-index: as letras do título, logo abaixo, têm uma caixa invisível mais alta
+   que elas, que passava por cima do link e engolia o clique) */
+.voltar {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+  margin: -8px 0 clamp(4px, .8vw, 10px) -6px;
+  padding: 8px 6px;                             /* área de clique maior que a seta */
+  color: var(--fraco);
+}
+
+.voltar svg {
+  display: block;
+  width: 44px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform .2s ease;
+}
+
+.voltar:hover { color: var(--linha); }
+.voltar:hover svg { transform: translateX(-5px); }
+
+/* celular e tablet: uma coluna só, nesta ordem — nome, resumo, foto, dados */
+.grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "nome" "resumo" "foto" "fatos";
+  gap: 18px;
+}
+
+/* espaço ainda sem texto: sem a linha do resumo */
+.grade.sem-resumo { grid-template-areas: "nome" "foto" "fatos"; }
+
+.coluna { display: contents; }      /* em tela estreita a coluna não existe: seus filhos entram na grade */
+
+.coluna h1 { grid-area: nome; }
+.resumo    { grid-area: resumo; }
+.principal { grid-area: foto; }
+.fatos     { grid-area: fatos; }
+
+.coluna h1 {
+  font-size: clamp(4.25rem, 15vw, 9rem);
+  line-height: .84;
+  white-space: normal;
+}
+
+/* a última palavra do nome e a estrela (js/espaco.js) não se separam */
+.fim-do-nome { white-space: nowrap; }
+
+.chamada {
+  margin: 0;
+  max-width: 24ch;
+  font-size: clamp(1.3rem, 1.9vw, 1.7rem);
+  line-height: 1.22;
+}
+
+.resumo [hidden] { display: none; }
+
+/* ---------- fotos ---------- */
+
+/* um quadro de foto: a foto preenche o quadro inteiro, cortando o que sobrar */
+.foto {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.foto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* quadro vazio: o X de "aqui entra uma imagem", no mesmo traço da planta */
+.foto.vazia { border: 1px solid var(--mais-fraco); }
+.foto.vazia svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.foto.vazia line { stroke: var(--mais-fraco); stroke-width: 1; vector-effect: non-scaling-stroke; }
+
+.foto.vazia figcaption, .foto.giro360 figcaption {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  padding: 1px 7px;
+  background: var(--grafite);
+  font-size: .75rem;
+  color: var(--fraco);
+}
+
+/* foto 360°: o player ocupa o quadro inteiro; arrasta-se a foto para olhar em volta.
+   A legenda não recebe cliques, para não atrapalhar o arrastar. */
+.foto.giro360 { --corte: 0px; border: 1px solid var(--mais-fraco); background: #1f1f1f; }
+
+/* Só no teste no computador (CENTRAL.ocultarMarcaKuula, em js/espacos.js): a faixa de cima
+   do player fica para fora do quadro — o player é 46 px mais alto que o quadro e começa
+   46 px acima dele. É nessa faixa que o Kuula põe o logo dele e os botões INFO e tela
+   cheia, que ele só deixa desligar em conta paga. A versão para publicar não corta nada. */
+.foto.giro360.sem-marca { --corte: 46px; }
+.foto.giro360 iframe {
+  position: absolute;
+  left: 0;
+  top: calc(var(--corte) * -1);
+  width: 100%;
+  height: calc(100% + var(--corte));
+  border: 0;
+}
+.foto.giro360 figcaption { pointer-events: none; color: var(--linha); }
+
+/* galeria: as outras fotos, até 10, logo abaixo da primeira tela */
+.galeria {
+  padding: clamp(18px, 2.4vw, 34px) var(--lado) 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 699px) {
+  .galeria { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+}
+
+/* ---------- fatos: dados, planta de localização e consulta ---------- */
+
+.fatos { display: grid; gap: 16px; align-content: start; }
+
+.dados { margin: 0; border-top: 1px solid var(--linha); }
+
+.dados > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 9px 0 8px;
+  border-bottom: 1px solid var(--mais-fraco);
+}
+
+.dados > div:last-child { border-bottom-color: var(--linha); }
+.dados dt { font-size: .875rem; color: var(--fraco); }
+.dados dd { margin: 0; font-weight: 600; text-align: right; }
+.dados dd.falta { font-weight: 400; color: var(--mais-fraco); }
+
+/* planta de localização, que também é mapa: o espaço desta página aceso; os outros abrem
+   a página deles; os botões de cima trocam o andar; a legenda leva à planta grande */
+.chave {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--linha);
+  color: var(--linha);
+}
+
+/* andares: três partes iguais, como os botões de andar da planta grande */
+.chave-andares {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--linha);
+}
+
+.chave-andar {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 7px 6px 5px;
+  font-family: var(--anton);
+  font-size: .95rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--fraco);
+  cursor: pointer;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.chave-andar + .chave-andar { border-left: 1px solid var(--linha); }
+.chave-andar:hover { background: var(--toque); color: var(--linha); }
+.chave-andar[aria-pressed="true"] { background: var(--linha); color: var(--grafite); }
+.chave-andar:focus-visible { outline-offset: -4px; outline-color: currentColor; }
+
+.chave-papel { display: block; padding: 10px; }
+.chave-papel svg { display: block; width: 100%; height: auto; }
+
+/* os outros espaços acendem de leve com o mouse; o desta página continua aceso */
+.chave .espaco:hover .area, .chave .espaco:focus-visible .area { fill: rgba(244, 244, 244, .16); }
+.chave .espaco:focus-visible { outline: none; }
+
+.chave-legenda {
+  flex: none;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  border-top: 1px solid var(--linha);
+  padding: 7px 12px 6px;
+  font-size: .875rem;
+  color: var(--fraco);
+  text-decoration: none;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+.chave-legenda:hover { background: var(--toque); color: var(--linha); }
+
+/* com o mouse sobre um espaço da planta: o nome dele, em branco, e a área */
+.chave-legenda.sobre { color: var(--fraco); }
+.chave-legenda.sobre strong { font-weight: 600; color: var(--linha); }
+
+/* consulta: o passo seguinte da página, por isso já vem aceso */
+.consultar.chamar {
+  padding: 17px 20px 14px;
+  border: 0;
+  background: var(--linha);
+  color: var(--grafite);
+  font-size: 1.3rem;
+}
+
+.consultar.chamar:hover { background: #fff; }
+
+/* celular: a consulta fica presa ao pé da tela, sempre à mão */
+@media (max-width: 599px) {
+  main { padding-bottom: 58px; }
+
+  .consultar.chamar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    padding: 18px 16px 15px;
+    font-size: 1.2rem;
+  }
+}
+
+/* ---------- primeira tela, em tela larga ---------- */
+
+/* Duas colunas: à esquerda o nome e o resumo em cima, e embaixo os dados, a planta e o
+   botão; à direita a foto principal, do topo das letras do nome ao pé do botão.
+
+   A primeira tela tem a altura da janela (menos o topo) e é IGUAL em todos os espaços: a
+   foto, a planta de localização e o botão ficam no mesmo tamanho e no mesmo lugar, só o
+   texto muda. Para isso o tamanho da planta depende só da janela, nunca do espaço, e o que
+   sobra de altura num espaço com menos texto vira respiro entre o resumo e os dados.
+   (Os textos longos e os dados a mais de um espaço ficam embaixo, em "Sobre o espaço".) */
+@media (min-width: 1000px) {
+  .tela {
+    display: flex;
+    flex-direction: column;
+    height: calc(100dvh - 61px);                /* 61 px: a altura do topo */
+    min-height: 560px;                          /* janela mais baixa que isso: a página rola */
+    padding-bottom: clamp(14px, 2dvh, 24px);
+  }
+
+  .voltar { flex: none; align-self: flex-start; }
+
+  .grade {
+    flex: 1 1 auto;
+    min-height: 0;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-areas: "coluna foto";
+    gap: 0 clamp(24px, 3vw, 44px);
+  }
+
+  .grade.sem-resumo { grid-template-areas: "coluna foto"; }
+
+  .coluna {
+    grid-area: coluna;
+    container-type: inline-size;                /* o tamanho do nome depende da largura da coluna */
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 2.2dvh, 22px);
+    min-height: 0;
+  }
+
+  /* O nome cabe sempre numa linha, na largura da coluna: --larg é a largura dele em "em"
+     (js/espaco.js mede), então um nome comprido como HALL CLUB sai menor que VENUE.
+     text-box apara a caixa do título rente às letras, para a foto ao lado começar
+     exatamente no topo delas. */
+  .coluna h1 {
+    flex: none;
+    font-size: clamp(3.5rem, min(calc(100cqw / var(--larg, 3.9)), 14dvh), 15rem);
+    white-space: nowrap;
+    text-box: trim-both cap alphabetic;
+  }
+
+  .resumo { flex: none; }
+
+  /* dados, planta e botão: sempre no pé da coluna */
+  .fatos { display: flex; flex-direction: column; flex: none; margin-top: auto; }
+  .dados, .chamar, .chave-legenda, .chave { flex: none; }
+
+  /* Planta de localização: a mesma altura em todos os espaços, que só depende da janela —
+     a altura que sobra no pior caso (nome grande, resumo em duas linhas, três linhas de
+     dados). Nunca mais larga que a coluna; o desenho se ajusta dentro, centrado. */
+  .chave-papel {
+    position: relative;
+    height: clamp(96px, calc(88dvh - 524px), calc(100cqw / 2.216 + 16px));
+    padding: 0;
+  }
+
+  .chave-papel svg { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); }
+
+  /* a foto principal estica até ter a altura da coluna */
+  .principal { aspect-ratio: auto; min-height: 260px; }
+}
+
+/* ---------- listas ---------- */
+
+.listas {
+  padding: clamp(28px, 4vw, 56px) var(--lado) 0;
+  display: grid;
+  gap: 28px clamp(24px, 3vw, 44px);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  align-items: start;
+}
+
+.listas:empty { display: none; }
+
+.lista h2, .todos > h2 {
+  margin: 0 0 10px;
+  font-family: var(--anton);
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.lista ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  column-width: 230px;
+  column-gap: clamp(24px, 3vw, 44px);
+  font-size: .9375rem;
+  line-height: 1.35;
+}
+
+.lista li {
+  break-inside: avoid;
+  padding: 7px 0 6px;
+  border-top: 1px solid var(--mais-fraco);
+}
+
+/* "Sobre o espaço": os textos longos e os dados que não cabem na primeira tela */
+.lista.sobre p { margin: 0 0 12px; max-width: 46ch; font-size: .9375rem; line-height: 1.4; color: var(--fraco); }
+.lista.sobre ul { column-width: auto; }
+.lista.sobre li { display: flex; justify-content: space-between; gap: 16px; }
+.lista.sobre .rotulo { color: var(--fraco); }
+
+/* ---------- todos os espaços ---------- */
+
+.todos { padding: clamp(28px, 4vw, 56px) var(--lado) clamp(32px, 5vw, 72px); }
+
+@media (min-width: 700px) {
+  .todos .indice { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: stretch; }
+  .todos .grupo + .grupo { border-top: 1px solid var(--linha); border-left: 0; }
+}
+
+/* ---------- endereço que não corresponde a nenhum espaço ---------- */
+
+.sem-espaco .grade { grid-template-columns: minmax(0, 1fr); grid-template-areas: "nome" "resumo"; }
+.sem-espaco .coluna { display: contents; }
+.sem-espaco .coluna h1 { font-size: clamp(2.75rem, 7vw, 6rem); line-height: .9; white-space: normal; text-box: normal; }
+.sem-espaco .principal, .sem-espaco .galeria, .sem-espaco .fatos, .sem-espaco .listas { display: none; }
+.sem-espaco .chamada { max-width: 46ch; font-size: 1.125rem; color: var(--fraco); }

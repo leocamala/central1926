@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#2b2b2b">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <title>Por dentro da Central — Central 1926</title>
+  <meta name="description" content="Conheça a Central 1926 andar por andar: a planta de cada andar e uma página para cada espaço de locação.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@100..125,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/planta.css?v=5">
+</head>
+<body class="pagina-planta">
+  <header class="topo">
+    <a class="marca" href="planta.html">Central 1926</a>
+    <p class="endereco">Praça da Bandeira, 137<span>, São Paulo</span></p>
+  </header>
+
+  <main>
+    <section class="abertura">
+      <!-- a estrela de raios da marca, ao lado de CENTRAL: do tamanho das letras, e se desenha
+           girando quando a página carrega -->
+      <h1>Por dentro <span>da Central<svg class="estrela-titulo" viewBox="-25 -25 50 50" aria-hidden="true"><g>
+        <line pathLength="1" x1="7.84" y1="1.59" x2="23.52" y2="4.77"/>
+        <line pathLength="1" x1="4.42" y1="6.67" x2="13.26" y2="20.01"/>
+        <line pathLength="1" x1="-1.59" y1="7.84" x2="-4.77" y2="23.52"/>
+        <line pathLength="1" x1="-6.67" y1="4.42" x2="-20.01" y2="13.26"/>
+        <line pathLength="1" x1="-7.84" y1="-1.59" x2="-23.52" y2="-4.77"/>
+        <line pathLength="1" x1="-4.42" y1="-6.67" x2="-13.26" y2="-20.01"/>
+        <line pathLength="1" x1="1.59" y1="-7.84" x2="4.77" y2="-23.52"/>
+        <line pathLength="1" x1="6.67" y1="-4.42" x2="20.01" y2="-13.26"/>
+      </g></svg></span></h1>
+      <p class="intro">Três andares para o seu evento, numa subestação de energia de 1926. Na planta ou na lista, um clique destaca o espaço e outro abre a página dele.</p>
+    </section>
+
+    <section class="mesa" aria-label="Planta do prédio">
+      <!-- andares de cima para baixo, como o prédio. Em tela larga quem troca de andar é a lista. -->
+      <nav class="andares" aria-label="Andares">
+        <button type="button" class="andar" data-piso="rooftop">Rooftop</button>
+        <button type="button" class="andar" data-piso="primeiro">1º andar</button>
+        <button type="button" class="andar" data-piso="terreo">Térreo</button>
+      </nav>
+
+      <!-- lista de todos os espaços, andar por andar: montada por js/planta.js -->
+      <nav class="indice" id="indice" aria-label="Espaços, andar por andar"></nav>
+
+      <div class="prancha">
+        <div class="papel" id="desenho">
+          <!-- a planta é montada por js/planta.js -->
+        </div>
+
+        <!-- painel: diz o que se está vendo. Sem nada escolhido, o andar; com o mouse por
+             cima de um espaço ou depois de um clique, o espaço: nome, descrição e dados. -->
+        <div class="painel" id="painel">
+          <div class="painel-titulo">
+            <h2 class="painel-nome" id="p-nome">Térreo</h2>
+            <p class="painel-nota" id="p-nota"></p>
+          </div>
+          <dl class="painel-dados" id="p-dados"></dl>
+          <div class="acoes">
+            <!-- só aparece com um espaço escolhido: abre a página dele (igual a clicar de novo nele) -->
+            <a class="ver" id="ver">Ver o espaço</a>
+            <!-- WhatsApp de locação: o número fica em js/espacos.js -->
+            <a class="consultar" id="consultar" target="_blank" rel="noopener">Consultar <span>no WhatsApp</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/planta-dados.js?v=5"></script>
+  <script src="js/espacos.js?v=5"></script>
+  <script src="js/planta-base.js?v=5"></script>
+  <script src="js/planta.js?v=5"></script>
+</body>
+</html>
